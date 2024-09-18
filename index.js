@@ -1,8 +1,7 @@
 const main = document.querySelector("main");
 const root = document.querySelector(":root");
-const input = document.querySelector("input");
-const resultInput = document.querySelector("#result");
-
+const input = document.getElementById("input");
+const resultInput = document.getElementById("result");
 const allowedKeys = [
   "(",
   ")",
@@ -28,34 +27,42 @@ const allowedKeys = [
 document.querySelectorAll(".charKey").forEach(function (charKeyBtn) {
   charKeyBtn.addEventListener("click", function () {
     const value = charKeyBtn.dataset.value;
-    // primeiro value é nome da constante - segundo value é o nome após o data- no html
     input.value += value;
+    // input.value += charKeyBtn.textContent;
   });
 });
 
+input.focus();
+
 document.getElementById("clear").addEventListener("click", function () {
+  if (resultInput.value == "ERROR") {
+    resultInput.value = "";
+    resultInput.classList.remove("error");
+  } else {
+    resultInput.value = "";
+  }
   input.value = "";
   input.focus();
 });
 
-input.addEventListener("keydown", function (e) {
-  e.preventDefault();
-
-  if (allowedKeys.includes(e.key)) {
-    input.value += e.key;
+input.addEventListener("keydown", function (ev) {
+  ev.preventDefault();
+  if (allowedKeys.includes(ev.key)) {
+    input.value += ev.key;
     return;
   }
-  if (e.key === "Backspace") {
+  if (ev.key === "Backspace") {
     input.value = input.value.slice(0, -1);
+    return;
   }
-  if (e.key === "Enter") {
-    calculate();
+  if (ev.key === "Enter") {
+    Calculate();
   }
 });
 
-document.getElementById("equal").addEventListener("click", calculate);
+document.getElementById("equal").addEventListener("click", Calculate);
 
-function calculate() {
+function Calculate() {
   resultInput.value = "ERROR";
   resultInput.classList.add("error");
   const result = eval(input.value);
@@ -68,9 +75,9 @@ document
   .addEventListener("click", function (ev) {
     const button = ev.currentTarget;
     if (button.innerText === "Copy") {
-      button.innerText = "Copied";
+      button.innerText = "Copied!";
       button.classList.add("success");
-      window.navigator.clipboard.writeText(resultInput.value);
+      navigator.clipboard.writeText(resultInput.value);
     } else {
       button.innerText = "Copy";
       button.classList.remove("success");
